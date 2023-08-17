@@ -55,7 +55,7 @@ async def channel_save(client, message):
             return
         
         try:
-            caption = f"<code>new_filename</code>"
+            caption = f"<code>{new_filename}</code>"
             thumbnail_path = await USER.download_media(file.thumbs[0].file_id)
             await ms.edit("Uploading....")
             thump = await USER.get_messages(int(-1001270936734), int(126))
@@ -66,7 +66,7 @@ async def channel_save(client, message):
             img.save(ph_path, "JPEG")
             try:
                 f = await USER.send_document(
-                    int(-1001920130027),
+                    int(-1001837941527),
                     document=file_path,
                     caption=caption,
                     thumb=ph_path,
