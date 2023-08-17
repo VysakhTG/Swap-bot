@@ -55,30 +55,39 @@ async def channel_save(client, message):
             return
         
         try:
-            caption = new_filename if owe.caption is None else owe.caption
+            caption = f"<code>new_filename</code>"
             thumbnail_path = await USER.download_media(file.thumbs[0].file_id)
             await ms.edit("Uploading....")
-           
+            thump = await USER.get_messages(int(-1001270936734), int(126))
+            thumb = getattr(thump, thump.media.value)
+            ph_path = await USER.download_media(thumb.file_id)
+            img = Image.open(ph_path).convert("RGB")  # Added conversion to RGB
+            img.thumbnail((320, 320))
+            img.save(ph_path, "JPEG")
             try:
                 f = await USER.send_document(
-                    CHANNEL,
+                    int(-1001920130027),
                     document=file_path,
                     caption=caption,
-                    thumb=thumbnail_path,
+                    thumb=ph_path,
                     progress=progress_for_pyrogram,
                     progress_args=("Uᴩʟᴏᴅ Sᴛᴀʀᴛᴇᴅ....", ms, time.time())
                 )
                 
                 await ms.delete()
+                await owe.delete()
+                os.remove(file_path)
+                if ph_path:
+                    os.remove(ph_path)
             except Exception as e:
                 os.remove(file_path)
-                if thumbnail_path:
-                    os.remove(thumbnail_path)
+                if ph_path:
+                    os.remove(ph_path)
             return await ms.edit(f"Error: {e}")
      
         except Exception as e:
             os.remove(file_path)
-            if thumbnail_path:
-                os.remove(thumbnail_path)
+            if ph_path:
+                os.remove(ph_path)
             return await ms.edit(f"Error: {e}")
      
