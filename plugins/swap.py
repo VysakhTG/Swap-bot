@@ -1,6 +1,5 @@
-
 from pyrogram import Client, filters
-from pyrogram.types import InputFile
+from pyrogram.types import InputFile, InlineKeyboardMarkup, InlineKeyboardButton
 import cv2
 import dlib
 import numpy as np
@@ -8,6 +7,27 @@ import numpy as np
 detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 
+
+
+@Client.on_message(filters.command("faceswap"))
+async def start(client, query):
+    await client.send_message(
+        query.from_user.id,
+        "Do you want to continue with face swapping?",
+        reply_markup=InlineKeyboardMarkup(
+            [[InlineKeyboardButton("Continue", callback_data="start")]]
+        )
+    )
+
+@Client.on_callback_query(filters.regex("start"))
+async def startswap(client, query):
+    chat_id = query.message.chat.id
+    chat_id = query.from_user.id
+
+    first_photo = await client.ask(identifier = (chat_id, chat_id, None), text="send first photo")
+    second_photo = await client.ask(identifier = (chat_id, chat_id, None), text="send second photo")
+    await perform_face_swapping(client, chat_id, user_id, first_photo.photo.file_id, second_photo.photo.file_id)
+            
 
 async def perform_face_swapping(bot, chat_id, user_id, first_photo, second_photo):
     first_image = await bot.download_media(first_photo)
