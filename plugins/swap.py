@@ -1,5 +1,6 @@
 from pyrogram import Client, filters
-from pyrogram.types import InputFile, InlineKeyboardMarkup, InlineKeyboardButton
+from pyrogram.raw.types import InputFile
+from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton
 import cv2
 import dlib
 import numpy as np
